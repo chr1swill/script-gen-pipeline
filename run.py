@@ -27,12 +27,14 @@ while (i < len(text_arr)):
     else:
         i+=1
 
+import os
+sys.path.append(os.path.join(os.path.dirname(__file__), 'Kokoro-82M'))
 from models import build_model
 import torch
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 print(f"Using device: {device}")
 
-MODEL = build_model('kokoro-v0_19.pth', device)
+MODEL = build_model('Kokoro-82M/kokoro-v0_19.pth', device)
 # you can easily test voices here -> https://huggingface.co/spaces/hexgrad/Kokoro-TTS
 VOICE_NAME = [
         'af',
@@ -40,12 +42,11 @@ VOICE_NAME = [
         'bf_emma', 'bf_isabella', 'bm_george', 'bm_lewis',
         'af_nicole', 'af_sky',
         ][0] # 0 (f) and 4 (m) sound the best to me
-VOICEPACK = torch.load(f'voices/{VOICE_NAME}.pt', weights_only=True).to(device)
+VOICEPACK = torch.load(f'Kokoro-82M/voices/{VOICE_NAME}.pt', weights_only=True).to(device)
 print(f'Loaded voice: {VOICE_NAME}')
 
 from kokoro import generate
 from scipy.io.wavfile import write
-import os
 import time
 
 ffmpeg_inputs_file_path = output_path + "myinput.txt"
