@@ -49,7 +49,8 @@ from kokoro import generate
 from scipy.io.wavfile import write
 import time
 
-ffmpeg_inputs_file_path = output_path + "myinput.txt"
+wav_pieces_dir = output_path + "wav-pieces/"
+ffmpeg_inputs_file_path = wav_pieces_dir + "myinput.txt"
 try:
     os.stat(ffmpeg_inputs_file_path) 
     os.remove(ffmpeg_inputs_file_path)
@@ -67,7 +68,7 @@ i = 0
 for sentence in text_arr: 
     audio, out_ps = generate(MODEL, sentence, VOICEPACK, lang=VOICE_NAME[0])
 
-    file_path = output_path + str(i) + ".wav"
+    file_path = wav_pieces_dir + str(i) + ".wav"
     write(file_path, rate=24000, data=audio)
     print(f"Wrote audio data to file: {file_path}")
 
