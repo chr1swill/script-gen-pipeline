@@ -4,16 +4,20 @@ KOKORO_DIR=Kokoro-82M
 WHISPER_DIR=whisper
 
 if [ ! -d "$KOKORO_DIR" ]; then
-    if which git-lfs >/dev/null; then
-      git clone https://huggingface.co/hexgrad/Kokoro-82M
-    else
-      sudo apt install git-lfs -y
-      git clone https://huggingface.co/hexgrad/Kokoro-82M
-    fi
+  if which git-lfs >/dev/null; then
+    echo "You have git-lfs installed already"
+  else
+    echo "You don't have git-lfs installed, installing it now"
+    sudo apt install git-lfs -y
+  fi
+
+  echo "Cloning kokoro repo"
+  git clone https://huggingface.co/hexgrad/Kokoro-82M
 fi
 
 if [ ! -d "$WHISPER_DIR" ]; then
-    git clone https://github.com/openai/whisper.git
+  echo "Cloning whisper repo"
+  git clone https://github.com/openai/whisper.git
 fi
 
 if which ffmpeg >/dev/null; then
