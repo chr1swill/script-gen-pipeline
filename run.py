@@ -31,7 +31,7 @@ print(
 
 i = 0
 while (i < len(text_arr)):
-    if text_arr[i].isspace():
+    if text_arr[i].isspace() or text_arr[i].strip() == '':
         print(f"Index={i}, value={
             text_arr[i]
         } contained an lonely space char which has been removed"
@@ -64,24 +64,30 @@ try:
     os.stat(ffmpeg_inputs_file_path)
     os.remove(ffmpeg_inputs_file_path)
     print(f"File already exists, removing it: {ffmpeg_inputs_file_path}")
-except: 
+except:
     print(f"Creating file: {ffmpeg_inputs_file_path}")
+    pass
 
 comment = "# " + time.strftime("%Y-%m-%d--%H-%M") + \
     " Audio inputs to join together\n"
 
 try:
     os.makedirs(wav_pieces_dir)
-except: 
+except:
     pass
 
 ffmpeg_inputs_file = open(ffmpeg_inputs_file_path, "a")
 ffmpeg_inputs_file.write(comment)
 print(f"Create file: {ffmpeg_inputs_file_path} with timestamp commnet")
 
-i = 0
-for sentence in text_arr:
+# i = 0
+print(text_arr)
+for i in range(len(text_arr)):
+    sentence = text_arr[i]
+    print(f"sentence: {sentence}")
     audio, out_ps = generate(MODEL, sentence, VOICEPACK, lang=VOICE_NAME[0])
+    print(f"audio: {audio}")
+    print(f"out_ps: {out_ps}")
 
     file_path = wav_pieces_dir + str(i) + ".wav"
     write(file_path, rate=24000, data=audio)
@@ -90,7 +96,7 @@ for sentence in text_arr:
     current_input = "file '" + str(i) + ".wav" + "'\n"
     ffmpeg_inputs_file.write(current_input)
     print(f"Added input file: {file_path} to ffmpeg inputs file")
-    i += 1
+    # i += 1
 
 ffmpeg_inputs_file.close()
 ffmpeg_command = "ffmpeg -f concat -safe 0 -i " + ffmpeg_inputs_file_path + \
