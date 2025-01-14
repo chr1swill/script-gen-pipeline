@@ -8,12 +8,10 @@ WHISPER_DIR=whisper
 OS=$(uname)
 if [ "$OS" == "Darwin" ]; then
   echo "Running on Darwin, using brew to install packages"
-fi
-
-if [ "$OS" == "Linux" ]; then
+elif [ "$OS" == "Linux" ]; then
   echo "Running on Linux, using apt to install packages"
 else
-  echo "No setup script for you plateform"
+  echo "No setup script for you platform"
   exit 1
 fi
 
