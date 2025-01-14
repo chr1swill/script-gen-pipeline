@@ -67,7 +67,8 @@ else
   echo "You don't have python3-venv installed, installing it now"
 
   if [ "$OS" == "Darwin" ]; then
-    brew install python3-venv
+    #brew install python3-venv
+    echo "You can create a venv without additional packages"
   else
     sudo apt install python3-venv -y
   fi
