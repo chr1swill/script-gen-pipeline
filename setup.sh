@@ -32,6 +32,12 @@ if [ ! -d "$KOKORO_DIR" ]; then
   git clone https://huggingface.co/hexgrad/Kokoro-82M
 fi
 
+cd KOKORO_DIR
+echo "Getting large files from git if they are not already installed"
+git lfs install
+git lfs pull
+cd ../
+
 if [ ! -d "$WHISPER_DIR" ]; then
   echo "Cloning whisper repo"
   git clone https://github.com/openai/whisper.git
