@@ -85,7 +85,7 @@ print(text_arr)
 for i in range(len(text_arr)):
     sentence = text_arr[i]
     print(f"sentence: {sentence}")
-    audio, out_ps = generate(MODEL, sentence, VOICEPACK, lang=VOICE_NAME[0])
+    audio, out_ps = generate(MODEL, sentence, VOICEPACK, lang=VOICE_NAME[0], speed=1.5)
     print(f"audio: {audio}")
     print(f"out_ps: {out_ps}")
 
