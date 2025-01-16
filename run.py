@@ -52,7 +52,7 @@ VOICE_NAME = [
     'af_bella', 'af_sarah', 'am_adam', 'am_michael',
     'bf_emma', 'bf_isabella', 'bm_george', 'bm_lewis',
     'af_nicole', 'af_sky',
-][0]    # 0 (f) and 4 (m) sound the best to me
+][4]    # 0 (f) and 4 (m) sound the best to me
 VOICEPACK = torch.load(
     f'Kokoro-82M/voices/{VOICE_NAME}.pt', weights_only=True).to(device)
 print(f'Loaded voice: {VOICE_NAME}')
@@ -109,3 +109,41 @@ whisper_command = "whisper " + output_path + \
     output_path + "subtitles"
 print(f"Executing whisper command:\n\t{whisper_command}")
 os.system(whisper_command)
+
+# TTS_FILEPATH="code/ai/script-gen-pipeline/output/_intro/final_output.wav"
+# TTS_FILEPATH="$ROOT$TTS_FILEPATH"
+tts_filepath = output_path + "final_output.wav"
+
+# SUBTITLES_FILEPATH='code/ai/script-gen-pipeline/output/_intro/subtitles/final_output.vtt'
+# SUBTITLES_FILEPATH="$ROOT$SUBTITLES_FILEPATH"
+subtitle_filepath = output_path + "subtitles/" + "final_output.vtt"
+
+# VIDEO_FILEPATH='Videos/stock-clips/purple-fluid-60.mp4'
+# VIDEO_FILEPATH="$ROOT$VIDEO_FILEPATH"
+video_filepath = "$HOME/Videos/stock-clips/purple-fluid-60.mp4"
+
+# MUSIC_FILEPATH='Music/royalty-free/caves-of-dawn-10376-reduced-75.mp3'
+# MUSIC_FILEPATH="$ROOT$MUSIC_FILEPATH"
+music_filepath = "$HOME/Music/royalty-free/caves-of-dawn-10376-reduced-75.mp3"
+
+# OUTPUT_FILEPATH='Downloads/output.mp4'
+# OUTPUT_FILEPATH="$ROOT$OUTPUT_FILEPATH"
+try:
+    os.makedirs(output_path+"final/")
+except:
+    pass
+
+final_output_filepath = output_path + "final/output.mp4"
+
+# TTS_DURATION=$(ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 ${TTS_FILEPATH})
+tts_duration = f"$(ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 {tts_filepath})"
+
+# SUBTITLE_STYLE="force_style='Alignment=10,FontSize=18,FontName=Helvetica,Outline=4,OutlineColor=&HFFFFFFFF,PrimaryColor=&HF00000000'"
+subtitle_style = "force_style='Alignment=10,FontSize=18,FontName=Helvetica,Outline=4,OutlineColor=&HFFFFFFFF,PrimaryColor=&HF00000000'"
+
+# ffmpeg -stream_loop -1 -i ${VIDEO_FILEPATH} -i ${TTS_FILEPATH} -i ${MUSIC_FILEPATH} -lavfi "[0:v]subtitles=${SUBTITLES_FILEPATH}:${SUBTITLE_STYLE}[v];[1:a][2:a]amix=inputs=2:duration=longest[a]" -map "[v]" -map "[a]" -t ${TTS_DURATION} -c:v libx264 -c:a aac -b:a 192k ${OUTPUT_FILEPATH}
+
+video_create_command = f"ffmpeg -stream_loop -1 -i {video_filepath} -i {tts_filepath} -i {music_filepath} -lavfi \"[0:v]subtitles={subtitle_filepath}:{subtitle_style}[v];[1:a][2:a]amix=inputs=2:duration=longest[a]\" -map \"[v]\" -map \"[a]\" -t {tts_duration} -c:v libx264 -c:a aac -b:a 192k {final_output_filepath}"
+
+print(f"Executing command to create final video\n\t{video_create_command}")
+os.system(video_create_command)
