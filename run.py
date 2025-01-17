@@ -110,24 +110,11 @@ whisper_command = "whisper " + output_path + \
 print(f"Executing whisper command:\n\t{whisper_command}")
 os.system(whisper_command)
 
-# TTS_FILEPATH="code/ai/script-gen-pipeline/output/_intro/final_output.wav"
-# TTS_FILEPATH="$ROOT$TTS_FILEPATH"
 tts_filepath = output_path + "final_output.wav"
-
-# SUBTITLES_FILEPATH='code/ai/script-gen-pipeline/output/_intro/subtitles/final_output.vtt'
-# SUBTITLES_FILEPATH="$ROOT$SUBTITLES_FILEPATH"
 subtitle_filepath = output_path + "subtitles/" + "final_output.vtt"
-
-# VIDEO_FILEPATH='Videos/stock-clips/purple-fluid-60.mp4'
-# VIDEO_FILEPATH="$ROOT$VIDEO_FILEPATH"
 video_filepath = "$HOME/Videos/stock-clips/purple-fluid-60.mp4"
+music_filepath = "$HOME/Music/royalty-free/caves-of-dawn-10376-reduced-25.mp3"
 
-# MUSIC_FILEPATH='Music/royalty-free/caves-of-dawn-10376-reduced-75.mp3'
-# MUSIC_FILEPATH="$ROOT$MUSIC_FILEPATH"
-music_filepath = "$HOME/Music/royalty-free/caves-of-dawn-10376-reduced-75.mp3"
-
-# OUTPUT_FILEPATH='Downloads/output.mp4'
-# OUTPUT_FILEPATH="$ROOT$OUTPUT_FILEPATH"
 try:
     os.makedirs(output_path+"final/")
 except:
@@ -135,13 +122,8 @@ except:
 
 final_output_filepath = output_path + "final/output.mp4"
 
-# TTS_DURATION=$(ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 ${TTS_FILEPATH})
 tts_duration = f"$(ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 {tts_filepath})"
-
-# SUBTITLE_STYLE="force_style='Alignment=10,FontSize=18,FontName=Helvetica,Outline=4,OutlineColor=&HFFFFFFFF,PrimaryColor=&HF00000000'"
 subtitle_style = "force_style='Alignment=10,FontSize=18,FontName=Helvetica,Outline=4,OutlineColor=&HFFFFFFFF,PrimaryColor=&HF00000000'"
-
-# ffmpeg -stream_loop -1 -i ${VIDEO_FILEPATH} -i ${TTS_FILEPATH} -i ${MUSIC_FILEPATH} -lavfi "[0:v]subtitles=${SUBTITLES_FILEPATH}:${SUBTITLE_STYLE}[v];[1:a][2:a]amix=inputs=2:duration=longest[a]" -map "[v]" -map "[a]" -t ${TTS_DURATION} -c:v libx264 -c:a aac -b:a 192k ${OUTPUT_FILEPATH}
 
 video_create_command = f"ffmpeg -stream_loop -1 -i {video_filepath} -i {tts_filepath} -i {music_filepath} -lavfi \"[0:v]subtitles={subtitle_filepath}:{subtitle_style}[v];[1:a][2:a]amix=inputs=2:duration=longest[a]\" -map \"[v]\" -map \"[a]\" -t {tts_duration} -c:v libx264 -c:a aac -b:a 192k {final_output_filepath}"
 
